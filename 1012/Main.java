@@ -20,23 +20,45 @@ date:2015-11-13
 若sk    =                                                       表示该m符合要求
 */
 
+/*
+时间复杂度分析：
+最消耗时间的地方：
+1、对于给定的m进行check，平均需要循环k/2次才能给出结果
+2、对于m从小到大进行尝试，但是其中不是每一个m都得尝试；
+
+针对以上，分别的解决方案：
+1、使用数组memory进行记忆，如果之前有算过，就不用再重复计算；
+2、如果m%(2*k)==1，就把m=m+k;
+
+*/
+
 import  java.util.Scanner;
 
 public class Main
 {
     public static void main(String[] args)
     {
+        int[]   memory  =   new int[13];    //对于已经求过的值进行保存
+        int i;
+        for(i=0;i<13;i++) memory[i] =   0;
         Main    ma  =   new Main();
         int m,k;     //remain是每次的除数，表示剩余的活着人数
         Scanner cin =   new Scanner(System.in);
         while((k=cin.nextInt())!=0)
         {
+            if(memory[k-1]    !=  0)  
+            {
+                System.out.println(memory[k-1]);
+                continue;
+            }
             m        =   k+1;    //m的最小值是k+1
+            if(m%(2*k)==1) m=m+k;
             while(true) //不断将m++，寻找合适的最小m值
             {
                 if(ma.check(k,m))  
                 {
                     System.out.println(m);
+                    memory[k-1] =   m;
                     break;
                 }
                 else
